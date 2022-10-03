@@ -2,7 +2,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const util = require('util');
-const notesDB = require('./db/db.json');
+let notesDB = require('./db/db.json');
+const { uid } = require('uid');
 
 const PORT = 3001;
 
@@ -29,7 +30,7 @@ app.get('/api/notes', (req,res) => {
     res.json(notesDB);
 })
 
-// POST request to add a new note
+// POST Route to add a new note
 app.post('/api/notes', (req, res) => {
     // Log that a POST request was received
     console.info(`${req.method} request received to add a note`);
@@ -42,7 +43,8 @@ app.post('/api/notes', (req, res) => {
         // Variable for the object we will save
         const newNote = {
         title,
-        text
+        text, 
+        id: uid()
         };
 
         // Obtain existing notes
@@ -80,6 +82,12 @@ app.post('/api/notes', (req, res) => {
       res.status(500).json('Error in making new note!');
     }
   });
+
+// Deletion of note based on ID
+app.delete('/api/notes/:id', (req, res) => {
+    notesDB = notesDB.filter(note => note.id !== req.params.id)
+    res.json(notesDB);
+});
 
 // Local hosting for testing
 app.listen(PORT, () =>
