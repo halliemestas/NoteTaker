@@ -5,7 +5,7 @@ const util = require('util');
 let notesDB = require('./db/db.json');
 const { uid } = require('uid');
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
@@ -87,29 +87,6 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
     notesDB = notesDB.filter(note => note.id !== req.params.id)
     res.json(notesDB);
-
-    // Obtain existing notes
-    fs.readFile(notesDB, 'utf8', (err, data) => {
-        if (err) {
-        console.error(err);
-        } else {
-        // Convert string into JSON object
-        const parsedNotes = JSON.parse(data);
-
-        // Add a new note
-        parsedNotes.delete(req.params.id);
-
-        // Write updated notes back to the file
-        fs.writeFile(
-            notesDB,
-            JSON.stringify(parsedNotes, null, 4),
-            (writeErr) =>
-            writeErr
-                ? console.error(writeErr)
-                : console.info('Successfully removed note!')
-        );
-        }
-    })
 });
 
 // Local hosting for testing
