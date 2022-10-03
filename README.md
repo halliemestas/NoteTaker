@@ -56,4 +56,5 @@ The following images show the web application's appearance and functionality:
 
 
 ## Live Link 
-Coming Soon!
+
+https://notetakerhalliem.herokuapp.com/
